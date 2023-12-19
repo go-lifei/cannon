@@ -40,6 +40,7 @@ task(TASK_BUILD, 'Assemble a defined chain and save it to to a state which can b
     '(Experimental) Format in which to write the actions script (Options: json, ethers)'
   )
   .addFlag('noCompile', 'Do not execute hardhat compile before build')
+  .addPositionalParam('maxGasFee', 'max gas fee cap', '0.006')
   .setAction(
     async (
       {
@@ -56,6 +57,7 @@ task(TASK_BUILD, 'Assemble a defined chain and save it to to a state which can b
         impersonate,
         writeScript,
         writeScriptFormat,
+        maxGasFee,
       },
       hre
     ) => {
@@ -190,6 +192,8 @@ task(TASK_BUILD, 'Assemble a defined chain and save it to to a state which can b
         publicSourceCode: hre.config.cannon.publicSourceCode,
         writeScript,
         writeScriptFormat,
+        gasFee: maxGasFee,
+        priorityGasFee: maxGasFee ? (parseFloat(maxGasFee || '0') / 10).toString() : undefined,
       } as const;
 
       const { outputs } = await build(params);
