@@ -143,6 +143,14 @@ const routerStep = {
       ? await runtime.getSigner(config.from)
       : await runtime.getDefaultSigner(deployTxn, config.salt);
 
+    if (runtime.gasFee) {
+      deployTxn.maxFeePerGas = runtime.gasFee;
+    }
+
+    if (runtime.priorityGasFee) {
+      deployTxn.maxPriorityFeePerGas = runtime.priorityGasFee;
+    }
+
     debug('using deploy signer with address', await signer.getAddress());
 
     const deployedRouterContractTxn = await signer.sendTransaction(deployTxn);
